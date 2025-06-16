@@ -1,5 +1,5 @@
 THÔNG TIN HỆ THỐNG (D-SecVault-UAT1)
-Chạy vào lúc: Mon Jun 16 16:14:37 +07 2025
+Chạy vào lúc: Mon Jun 16 16:19:17 +07 2025
 ==============================================
 
 [1, 2, 3] THÔNG TIN HỆ ĐIỀU HÀNH, PHIÊN BẢN & BẢN VÁ
@@ -88,4 +88,4 @@ Domain Info (từ /etc/resolv.conf): Không có cấu hình
 
 [KEY MÃ HÓA] - Hãy lưu key này cẩn thận để giải mã
 ---------------------------------------------------
-daTXc4H80iGxMTY0I/HpNewYo+HnOlOmGsC09A0o5Pw=
+kUM65shEtUtLaG+KaP1u+LO8O8HLDEDzYB2JdP+R82I=
