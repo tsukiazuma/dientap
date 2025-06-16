@@ -1,1 +1,91 @@
-File được upload từ máy D-SecVault-UAT1 vào lúc: Mon Jun 16 16:01:28 +07 2025
+THÔNG TIN HỆ THỐNG (D-SecVault-UAT1)
+Chạy vào lúc: Mon Jun 16 16:14:37 +07 2025
+==============================================
+
+[1, 2, 3] THÔNG TIN HỆ ĐIỀU HÀNH, PHIÊN BẢN & BẢN VÁ
+---------------------------------------------------
+NAME="Red Hat Enterprise Linux"
+VERSION="8.4 (Ootpa)"
+ID="rhel"
+ID_LIKE="fedora"
+VERSION_ID="8.4"
+PLATFORM_ID="platform:el8"
+PRETTY_NAME="Red Hat Enterprise Linux 8.4 (Ootpa)"
+ANSI_COLOR="0;31"
+CPE_NAME="cpe:/o:redhat:enterprise_linux:8.4:GA"
+HOME_URL="https://www.redhat.com/"
+DOCUMENTATION_URL="https://access.redhat.com/documentation/red_hat_enterprise_linux/8/"
+BUG_REPORT_URL="https://bugzilla.redhat.com/"
+
+REDHAT_BUGZILLA_PRODUCT="Red Hat Enterprise Linux 8"
+REDHAT_BUGZILLA_PRODUCT_VERSION=8.4
+REDHAT_SUPPORT_PRODUCT="Red Hat Enterprise Linux"
+REDHAT_SUPPORT_PRODUCT_VERSION="8.4"
+
+[4] TÀI KHOẢN NGƯỜI DÙNG VÀ QUYỀN QUẢN TRỊ
+--------------------------------------------
+--- Tất cả tài khoản người dùng:
+root
+bin
+daemon
+adm
+lp
+sync
+shutdown
+halt
+mail
+operator
+games
+ftp
+nobody
+dbus
+systemd-coredump
+systemd-resolve
+tss
+polkitd
+unbound
+libstoragemgmt
+clevis
+saslauth
+postfix
+setroubleshoot
+cockpit-ws
+cockpit-wsinstance
+pcp
+sssd
+abrt
+grafana
+pesign
+chrony
+sshd
+tcpdump
+hoanc
+sonhv
+huydq2
+vault
+nhath
+cassandra
+elasticsearch
+wazuh
+netdata
+apache
+nginx
+radiusd
+rpc
+bvbank
+sentinelone
+namtn
+
+--- Tài khoản có quyền Quản trị (sudo/wheel):
+wheel:x:10:root,
+
+[5] TÊN MÁY CHỦ (HOSTNAME) VÀ DOMAIN
+--------------------------------------
+Hostname: D-SecVault-UAT1
+Domain Info (từ /etc/resolv.conf): Không có cấu hình
+
+==============================================
+
+[KEY MÃ HÓA] - Hãy lưu key này cẩn thận để giải mã
+---------------------------------------------------
+daTXc4H80iGxMTY0I/HpNewYo+HnOlOmGsC09A0o5Pw=
