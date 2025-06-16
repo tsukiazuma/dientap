@@ -1,5 +1,5 @@
 THONG TIN HE THONG (068-CNTT-163) 
-Chay vao luc: Mon 06/16/2025 16:21:23.60 
+Chay vao luc: Mon 06/16/2025 16:29:21.98 
 =================================================================== 
  
 [1, 2, 3] THONG TIN HE DIEU HANH, PHIEN BAN VA BAN VA 
@@ -46,4 +46,4 @@ Domain: VIETCAPITALBANK
  
 [KEY MA HOA] - Hay luu key nay can than de giai ma 
 --------------------------------------------------- 
-2Ga2whxB1EPei9bx4wn0DqEwxLKDg0b+O7uTi2iTg2A= 
+druKaEWfn50H1VaRs7h1Ijq+ZmytuANp7JT4RqLivSQ= 
