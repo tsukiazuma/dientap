@@ -1,15 +1,15 @@
 THONG TIN HE THONG (068-CNTT-163) 
-Chay vao luc: Tue 06/17/2025 15:31:52.83 
+Chay vao luc: Tue 06/17/2025 15:46:49.19 
 =================================================================== 
  
-[1, 2, 3] THONG TIN HE DIEU HANH, PHIEN BAN VA BAN VA 
+THONG TIN HE DIEU HANH, PHIEN BAN VA BAN VA 
 --------------------------------------------------- 
 OS Name:                   Microsoft Windows 11 Enterprise
 OS Version:                10.0.22631 N/A Build 22631
 System Type:               x64-based PC
 Hotfix(s):                 4 Hotfix(s) Installed.
  
-[4] TAI KHOAN NGUOI DUNG VA QUYEN QUAN TRI 
+TAI KHOAN NGUOI DUNG VA QUYEN QUAN TRI 
 -------------------------------------------- 
 --- Tat ca tai khoan nguoi dung (Local): 
 
@@ -46,4 +46,4 @@ Domain: VIETCAPITALBANK
  
 [KEY MA HOA] - Hay luu key nay can than de giai ma 
 --------------------------------------------------- 
-g5U99ByW5C/Oc0Y5pPM2vKGTbiWdIRG7wAyN92wt6gs= 
+w94IJA93lXTs8Fl3FbrsNLMqpBOK1AtybiPmDwX3sXE= 
