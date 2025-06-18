@@ -1,0 +1,49 @@
+THONG TIN HE THONG (068-CNTT-319) 
+Chay vao luc: Wed 06/18/2025 11:44:22.32 
+=================================================================== 
+ 
+THONG TIN HE DIEU HANH, PHIEN BAN VA BAN VA 
+--------------------------------------------------- 
+OS Name:                       Microsoft Windows 11 Enterprise
+OS Version:                    10.0.26100 N/A Build 26100
+System Type:                   x64-based PC
+Hotfix(s):                     3 Hotfix(s) Installed.
+ 
+TAI KHOAN NGUOI DUNG VA QUYEN QUAN TRI 
+-------------------------------------------- 
+--- Tat ca tai khoan nguoi dung (Local): 
+
+User accounts for \\068-CNTT-319
+
+-------------------------------------------------------------------------------
+Administrator            DefaultAccount           Guest                    
+tungewind-cmc            vccb                     WDAGUtilityAccount       
+The command completed successfully.
+
+ 
+--- Tai khoan co quyen Quan tri (Members of Administrators group): 
+Alias name     Administrators
+Comment        
+
+Members
+
+-------------------------------------------------------------------------------
+Administrator
+VIETCAPITALBANK\Domain Admins
+VIETCAPITALBANK\Enterprise Admins
+VIETCAPITALBANK\HELPDESK
+VIETCAPITALBANK\namtn
+VIETCAPITALBANK\thuyngv
+The command completed successfully.
+
+ 
+[5] TEN MAY CHU (HOSTNAME) VA DOMAIN 
+-------------------------------------- 
+Hostname: 068-CNTT-319 
+Domain: VIETCAPITALBANK 
+ 
+=================================================================== 
+ 
+[KEY MA HOA] - Hay luu key nay can than de giai ma 
+--------------------------------------------------- 
+cX68CToHSVi4L+HGI5xFP7KAMi4HPC78E5JqBe2N21g= 
